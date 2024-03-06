@@ -89,7 +89,7 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
         # separate filename, speaker_id and text
         audiopath, sid, language, text, phones, tone, word2ph = audiopath_sid_text
 
-        bert, phones, tone, language = self.get_text(
+        en_bert, phones, tone, language = self.get_text(
             text, word2ph, phones, tone, language, audiopath
         )
 
@@ -99,7 +99,7 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
             torch.load(audiopath.replace(".wav", ".emo.pt"), map_location="cpu"),
             dim=1,
         )
-        return (phones, spec, wav, sid, tone, language, bert, emo)
+        return (phones, spec, wav, sid, tone, language, en_bert, emo)
 
     def get_audio(self, filename):
         audio, sampling_rate = load_wav_to_torch(filename)
@@ -153,12 +153,12 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
                 word2ph[i] = word2ph[i] * 2
             word2ph[0] += 1
         bert_path = wav_path.replace(".wav", ".bert.pt")
-        bert = torch.load(bert_path)
-        assert bert.shape[-1] == len(phone)
+        en_bert = torch.load(bert_path)
+        assert en_bert.shape[-1] == len(phone)
         phone = torch.LongTensor(phone)
         tone = torch.LongTensor(tone)
         language = torch.LongTensor(language)
-        return bert, phone, tone, language
+        return en_bert, phone, tone, language
 
     def get_sid(self, sid):
         sid = torch.LongTensor([int(sid)])
@@ -200,8 +200,8 @@ class TextAudioSpeakerCollate:
         text_padded = torch.LongTensor(len(batch), max_text_len)
         tone_padded = torch.LongTensor(len(batch), max_text_len)
         language_padded = torch.LongTensor(len(batch), max_text_len)
-        bert_padded = torch.FloatTensor(len(batch), 1024, max_text_len)
-        # en_bert_padded = torch.FloatTensor(len(batch), 1024, max_text_len)
+        #bert_padded = torch.FloatTensor(len(batch), 1024, max_text_len)
+        en_bert_padded = torch.FloatTensor(len(batch), 1024, max_text_len)
         emo = torch.FloatTensor(len(batch), 512)
 
         spec_padded = torch.FloatTensor(len(batch), batch[0][1].size(0), max_spec_len)
@@ -211,8 +211,8 @@ class TextAudioSpeakerCollate:
         language_padded.zero_()
         spec_padded.zero_()
         wav_padded.zero_()
-        bert_padded.zero_()
-        # en_bert_padded.zero_()
+        #bert_padded.zero_()
+        en_bert_padded.zero_()
         emo.zero_()
 
         for i in range(len(ids_sorted_decreasing)):
@@ -238,11 +238,8 @@ class TextAudioSpeakerCollate:
             language = row[5]
             language_padded[i, : language.size(0)] = language
 
-            bert = row[6]
-            bert_padded[i, :, : bert.size(1)] = bert
-
-            # en_bert = row[7]
-            # en_bert_padded[i, :, : en_bert.size(1)] = en_bert
+            en_bert = row[6]
+            en_bert_padded[i, :, : en_bert.size(1)] = en_bert
 
             emo[i, :] = row[7]
 
@@ -256,7 +253,7 @@ class TextAudioSpeakerCollate:
             sid,
             tone_padded,
             language_padded,
-            bert_padded,
+            en_bert_padded,
             emo,
         )
 
