@@ -1,3 +1,14 @@
+```
+alias python=python3
+alias pip=pip3
+python -m venv venv
+source venv/bin/activate
+pip install jupyterlab
+jupyter lab --ip 0.0.0.0
+```
+
+--------
+
 <div align="center">
 
 <img alt="LOGO" src="https://cdn.jsdelivr.net/gh/fishaudio/fish-diffusion@main/images/logo_512x512.png" width="256" height="256" />
@@ -6,9 +17,9 @@
 
 VITS2 Backbone with multilingual bert
 
-For quick guide, please refer to `webui_preprocess.py`.
+For quick guide, please refer to `colab.ipynb`.
 
-简易教程请参见 `webui_preprocess.py`。
+简易教程请参见 `colab.ipynb`。
 
 ## 请注意，本项目核心思路来源于[anyvoiceai/MassTTS](https://github.com/anyvoiceai/MassTTS) 一个非常好的tts项目
 ## MassTTS的演示demo为[ai版峰哥锐评峰哥本人,并找回了在金三角失落的腰子](https://www.bilibili.com/video/BV1w24y1c7z9)

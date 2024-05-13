@@ -11,12 +11,12 @@ processor = ClapProcessor.from_pretrained(LOCAL_PATH)
 
 
 def get_clap_audio_feature(audio_data, device=config.bert_gen_config.device):
-    if (
-        sys.platform == "darwin"
-        and torch.backends.mps.is_available()
-        and device == "cpu"
-    ):
-        device = "mps"
+    # if (
+    #     sys.platform == "darwin"
+    #     and torch.backends.mps.is_available()
+    #     and device == "cpu"
+    # ):
+    #     device = "mps"
     if not device:
         device = "cuda"
     if device not in models.keys():
@@ -35,12 +35,12 @@ def get_clap_audio_feature(audio_data, device=config.bert_gen_config.device):
 
 
 def get_clap_text_feature(text, device=config.bert_gen_config.device):
-    if (
-        sys.platform == "darwin"
-        and torch.backends.mps.is_available()
-        and device == "cpu"
-    ):
-        device = "mps"
+    # if (
+    #     sys.platform == "darwin"
+    #     and torch.backends.mps.is_available()
+    #     and device == "cpu"
+    # ):
+    #     device = "mps"
     if not device:
         device = "cuda"
     if device not in models.keys():

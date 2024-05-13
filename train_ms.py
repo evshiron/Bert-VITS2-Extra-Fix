@@ -69,8 +69,8 @@ def run():
     )
 
     backend = "nccl"
-    if platform.system() == "Windows":
-        backend = "gloo"  # If Windows,switch to gloo backend.
+    if platform.system() in ["Windows", "Darwin"]:
+        backend = "gloo"  # If Windows or Mac, switch to gloo backend.
     dist.init_process_group(
         backend=backend,
         init_method="env://",
